@@ -60,6 +60,15 @@ CSRF_TRUSTED_ORIGINS = [
 if RAILWAY_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_DOMAIN}')
 
+# Production-only security: Railway terminates TLS at its proxy and forwards
+# the original scheme in X-Forwarded-Proto, so trust that header before
+# enforcing HTTPS (otherwise SECURE_SSL_REDIRECT would loop).
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 
 # Application definition
 

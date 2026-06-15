@@ -26,14 +26,10 @@
 
     <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
 
-       <img 
-            src="http://openweathermap.org/img/wn/{{ data.icon }}@2x.png" 
+       <img
+            src="https://openweathermap.org/img/wn/{{ data.icon }}@2x.png"
             alt="{{ data.description }}"
             style="width: 100px; height: 100px;">
-
-        <p 
-            style="margin: 1rem;">{{ data.description }}
-        </p>
 
         <h3 
             style="margin: 1rem;">{{ data.city }}
@@ -42,7 +38,23 @@
         <p 
             style="margin: 1rem;">{{ data.temperature }}°C
         </p>
+        <p
+            style="margin: 1rem; color: #777;">{{ data.description }}
+        </p>
 
+        <form 
+            method="POST" action="{% url 'delete_city' data.id %}">
+            {% csrf_token %}
+
+            <button 
+            type="submit"
+            onclick="return confirm('Are you sure you want to delete {{ data.city }}?')"
+            style="padding: 0.5rem 1rem; color: #fff; background-color: #dc3545;
+                border: none; border-radius: 4px; cursor: pointer;">
+          Delete
+            </button>
+
+        </form>
     </div>
 
     {% endfor %}
