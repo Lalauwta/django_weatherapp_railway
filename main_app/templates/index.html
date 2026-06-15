@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<!-- form add weather -->
+<form method="POST" class="city-form">
+
+    {% csrf_token %}
+    <input
+    type="text"
+    name="city"
+    placeholder="City Name" required>
+
+    <button
+    type="submit">
+    Add City
+    </button>
+
+</form>
+
+<!-- display weather card container -->
+
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+    
+    {% for data in weather_data %}
+
+    <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+
+       <img 
+            src="http://openweathermap.org/img/wn/{{ data.icon }}@2x.png" 
+            alt="{{ data.description }}"
+            style="width: 100px; height: 100px;">
+
+        <p 
+            style="margin: 1rem;">{{ data.description }}
+        </p>
+
+        <h3 
+            style="margin: 1rem;">{{ data.city }}
+        </h3>
+
+        <p 
+            style="margin: 1rem;">{{ data.temperature }}°C
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
