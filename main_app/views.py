@@ -22,7 +22,8 @@ def index(request):
     
     # if the response code is 200, it means the city name is valid, so we can add it to the database and redirect to the index page
         if response.get("cod") == 200:
-            if not  City.objects.filter(name=city_name).exists(): # check if the city already exists in the database
+            city_name = response.get("name", city_name)
+            if not  City.objects.filter(name__iexact=city_name).exists(): # check if the city already exists in the database
                     City.objects.create(name=city_name) # add the city to the database
                     messages.success(request,f'{city_name} city has been added succesfuly.')
             else:
