@@ -13,6 +13,12 @@ WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric
 
 def index(request):
 
+    # fail loudly if the API key isn't loaded, instead of every city
+    # silently coming back "not found"
+    if not API_KEY:
+        messages.error(request, 'Weather API key is not configured. Check your .env and restart the server.')
+        return render(request, 'index.html', {'weather_data': []})
+
     # when the user submits a city name, look it up via the API and,
     # if it's valid, add it to the database
     if request.method == "POST":
