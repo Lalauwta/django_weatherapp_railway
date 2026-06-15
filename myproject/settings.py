@@ -32,13 +32,33 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Hosts allowed to serve this app.
+# Defaults cover local development + any Railway subdomain (*.railway.app).
+# You can override/extend via the ALLOWED_HOSTS env var (comma-separated).
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.railway.app',
+    'djangoweatherapprailwaylanga.up.railway.app',
+]
 
-# Railway provides the deployment domain in this env var
+# Add the exact Railway domain if provided (e.g. weatherapp-production.up.railway.app)
 RAILWAY_DOMAIN = os.getenv('RAILWAY_PUBLIC_DOMAIN')
 if RAILWAY_DOMAIN:
     ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
-    CSRF_TRUSTED_ORIGINS = [f'https://{RAILWAY_DOMAIN}']
+
+# Add any extra hosts from the env var (comma-separated)
+EXTRA_HOSTS = os.getenv('ALLOWED_HOSTS')
+if EXTRA_HOSTS:
+    ALLOWED_HOSTS += [h.strip() for h in EXTRA_HOSTS.split(',') if h.strip()]
+
+# CSRF trusted origins for the Railway domain (required for POST/forms over HTTPS)
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'https://djangoweatherapprailwaylanga.up.railway.app',
+]
+if RAILWAY_DOMAIN:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_DOMAIN}')
 
 
 # Application definition
